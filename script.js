@@ -26,6 +26,7 @@ function renderAnimations(data) {
         loop
         hover
         autoplay
+        mode="lottie"
         style="width: 100%; height: 300px;">
       </lottie-player>
       <div class="title">${item.name}</div>
