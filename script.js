@@ -6,9 +6,9 @@ async function loadAnimations() {
   const res = await fetch(githubApi);
   const files = await res.json();
   return files
-    .filter(f => f.name.endsWith(".lottie"))
+    .filter(f => f.name.endsWith(".json"))
     .map(f => ({
-      name: f.name.replace(".lottie", ""),
+      name: f.name.replace(".json", ""),
       url: cdnPrefix + encodeURIComponent(f.name)
     }));
 }
@@ -26,7 +26,6 @@ function renderAnimations(data) {
         loop
         hover
         autoplay
-        mode="lottie"
         style="width: 100%; height: 300px;">
       </lottie-player>
       <div class="title">${item.name}</div>
