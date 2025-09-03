@@ -1,5 +1,6 @@
+
 const githubApi = "https://api.github.com/repos/dkicekeeper/lottie-files/contents/";
-const rawPrefix = "https://raw.githubusercontent.com/dkicekeeper/lottie-files/main/";
+const cdnPrefix = "https://cdn.jsdelivr.net/gh/dkicekeeper/lottie-files/";
 
 async function loadAnimations() {
   const res = await fetch(githubApi);
@@ -8,7 +9,7 @@ async function loadAnimations() {
     .filter(f => f.name.endsWith(".lottie"))
     .map(f => ({
       name: f.name.replace(".lottie", ""),
-      url: rawPrefix + f.name
+      url: cdnPrefix + f.name
     }));
 }
 
