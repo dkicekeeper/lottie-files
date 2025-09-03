@@ -1,19 +1,15 @@
+const githubApi = "https://api.github.com/repos/dkicekeeper/lottie-files/contents/";
+const rawPrefix = "https://raw.githubusercontent.com/dkicekeeper/lottie-files/main/";
 
-const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSFLGLmPWBE5wyGkDp49_K6eqZekLeOzPvXwjJS7BYvxrUkxRmu2Wn4LN8t6pKggz3BptK-R1av6xh6/pub?output=tsv';
-
-async function loadTSVData() {
-  const res = await fetch(sheetUrl);
-  const tsv = await res.text();
-  const lines = tsv.trim().split('\n');
-  const headers = lines[0].split('\t');
-  const rows = lines.slice(1).map(line => {
-    const values = line.split('\t');
-    return headers.reduce((obj, header, i) => {
-      obj[header.trim()] = values[i] || '';
-      return obj;
-    }, {});
-  });
-  return rows;
+async function loadAnimations() {
+  const res = await fetch(githubApi);
+  const files = await res.json();
+  return files
+    .filter(f => f.name.endsWith(".lottie"))
+    .map(f => ({
+      name: f.name.replace(".lottie", ""),
+      url: rawPrefix + f.name
+    }));
 }
 
 function renderAnimations(data) {
@@ -38,6 +34,6 @@ function renderAnimations(data) {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
-  const data = await loadTSVData();
+  const data = await loadAnimations();
   renderAnimations(data);
 });
