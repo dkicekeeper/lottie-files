@@ -9,7 +9,7 @@ async function loadAnimations() {
     .filter(f => f.name.endsWith(".lottie"))
     .map(f => ({
       name: f.name.replace(".lottie", ""),
-      url: cdnPrefix + f.name
+      url: cdnPrefix + encodeURIComponent(f.name)
     }));
 }
 
