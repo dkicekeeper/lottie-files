@@ -1,15 +1,21 @@
+const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSvFYhvFjLPFVbVQzVEhLsWJ_JHkacNR54z6pRmLDZFlrW8sSt6dyAaW0-PulDkef3gAMGlEyFrb4p7/pub?output=tsv';
 
-const publicSpreadsheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSvFYhvFjLPFVbVQzVEhLsWJ_JHkacNR54z6pRmLDZFlrW8sSt6dyAaW0-PulDkef3gAMGlEyFrb4p7/pub?output=tsv';
-
-function init() {
-  Tabletop.init({
-    key: publicSpreadsheetURL,
-    simpleSheet: true,
-    callback: showAnimations
+async function loadTSVData() {
+  const res = await fetch(sheetUrl);
+  const tsv = await res.text();
+  const lines = tsv.trim().split('\n');
+  const headers = lines[0].split('\t');
+  const rows = lines.slice(1).map(line => {
+    const values = line.split('\t');
+    return headers.reduce((obj, header, i) => {
+      obj[header.trim()] = values[i] || '';
+      return obj;
+    }, {});
   });
+  return rows;
 }
 
-function showAnimations(data) {
+function renderAnimations(data) {
   const container = document.getElementById('catalog');
   data.forEach((item, index) => {
     const card = document.createElement('div');
@@ -20,6 +26,7 @@ function showAnimations(data) {
       <div class="title">${item.name}</div>
     `;
     container.appendChild(card);
+
     lottie.loadAnimation({
       container: document.getElementById(`lottie-${index}`),
       renderer: 'svg',
@@ -30,4 +37,7 @@ function showAnimations(data) {
   });
 }
 
-window.addEventListener('DOMContentLoaded', init);
+window.addEventListener('DOMContentLoaded', async () => {
+  const data = await loadTSVData();
+  renderAnimations(data);
+});
