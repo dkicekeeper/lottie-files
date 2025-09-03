@@ -23,7 +23,7 @@
       e.preventDefault();
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
-      await fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
+      await fetch('https://script.google.com/macros/s/AKfycbxX1r6XbtJkOIgXXvkb7d6pZBuDF6iJW2Fan8tkQqPlfU8nXXkQHRrbWfSQECdOGJP_/exec', {
         method: 'POST',
         body: new URLSearchParams(data)
       });
