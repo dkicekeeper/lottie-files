@@ -1,3 +1,4 @@
+
 const githubApi = "https://api.github.com/repos/dkicekeeper/lottie-files/contents/";
 const cdnPrefix = "https://cdn.jsdelivr.net/gh/dkicekeeper/lottie-files/";
 
@@ -29,10 +30,25 @@ function renderAnimations(data) {
         style="width: 100%; height: 300px;">
       </lottie-player>
       <div class="title">${item.name}</div>
-      <a href="${item.url}" download="${item.filename}" class="download-button">⬇ Скачать JSON</a>
+      <button class="download-button" onclick="downloadJson('${item.url}', '${item.filename}')">⬇ Скачать JSON</button>
     `;
     container.appendChild(card);
   });
+}
+
+function downloadJson(url, filename) {
+  fetch(url)
+    .then(res => res.blob())
+    .then(blob => {
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(link.href);
+    })
+    .catch(err => alert("Ошибка при скачивании файла 😢"));
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
