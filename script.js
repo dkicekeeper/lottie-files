@@ -1,4 +1,3 @@
-
 const githubApi = "https://api.github.com/repos/dkicekeeper/lottie-files/contents/";
 const cdnPrefix = "https://cdn.jsdelivr.net/gh/dkicekeeper/lottie-files/";
 
@@ -9,7 +8,8 @@ async function loadAnimations() {
     .filter(f => f.name.endsWith(".json"))
     .map(f => ({
       name: f.name.replace(".json", ""),
-      url: cdnPrefix + encodeURIComponent(f.name)
+      url: cdnPrefix + encodeURIComponent(f.name),
+      filename: f.name
     }));
 }
 
@@ -29,6 +29,7 @@ function renderAnimations(data) {
         style="width: 100%; height: 300px;">
       </lottie-player>
       <div class="title">${item.name}</div>
+      <a href="${item.url}" download="${item.filename}" class="download-button">⬇ Скачать JSON</a>
     `;
     container.appendChild(card);
   });
