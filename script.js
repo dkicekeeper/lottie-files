@@ -6,9 +6,9 @@ async function loadAnimations() {
   const res = await fetch(githubApi);
   const files = await res.json();
   return files
-    .filter(f => f.name.endsWith(".json"))
+    .filter(f => f.name.endsWith(".json") || f.name.endsWith(".lottie"))
     .map(f => ({
-      name: f.name.replace(".json", ""),
+      name: f.name.replace(/\.(json|lottie)$/i, ""),
       url: cdnPrefix + encodeURIComponent(f.name),
       filename: f.name,
       ext: f.name.toLowerCase().endsWith(".lottie") ? ".lottie" : ".json"
@@ -20,23 +20,35 @@ function renderAnimations(data) {
   data.forEach((item) => {
     const card = document.createElement('div');
     card.className = 'card';
+    const isDotLottie = item.ext === ".lottie";
     card.innerHTML = `
-      <dotlottie-player
-        src="${item.url}"
-        background="transparent"
-        speed="1"
-        loop
-        autoplay
-        style="width: 100%; height: 300px;">
-      </dotlottie-player>
+      ${isDotLottie ? `
+        <dotlottie-player
+          src="${item.url}"
+          background="transparent"
+          speed="1"
+          loop
+          autoplay
+          style="width: 100%; height: 300px;">
+        </dotlottie-player>
+      ` : `
+        <lottie-player
+          src="${item.url}"
+          background="transparent"
+          speed="1"
+          loop
+          autoplay
+          style="width: 100%; height: 300px;">
+        </lottie-player>
+      `}
       <div class="title">${item.name}</div>
-      <button class="download-button" onclick="downloadJson('${item.url}', '${item.filename}')">⬇ Скачать JSON</button>
+      <button class="download-button" onclick="downloadFile('${item.url}', '${item.filename}')">⬇ Скачать ${isDotLottie ? 'LOTTIE' : 'JSON'}</button>
     `;
     container.appendChild(card);
   });
 }
 
-function downloadLottie(url, filename) {
+function downloadFile(url, filename) {
   fetch(url)
     .then(res => res.blob())
     .then(blob => {
