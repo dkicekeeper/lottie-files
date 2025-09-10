@@ -1,16 +1,18 @@
 
 const githubApi = "https://api.github.com/repos/dkicekeeper/lottie-files/contents/";
-const cdnPrefix = "https://cdn.jsdelivr.net/gh/dkicekeeper/lottie-files/";
+// Use explicit branch on jsDelivr to avoid redirects and ensure proper CORS/content-type
+const cdnPrefix = "https://cdn.jsdelivr.net/gh/dkicekeeper/lottie-files@main/";
 
 async function loadAnimations() {
   const res = await fetch(githubApi);
   const files = await res.json();
   return files
-    .filter(f => f.name.endsWith(".json"))
+    .filter(f => f.name.endsWith(".json") || f.name.endsWith(".lottie"))
     .map(f => ({
-      name: f.name.replace(".json", ""),
+      name: f.name.replace(/\.(json|lottie)$/i, ""),
       url: cdnPrefix + encodeURIComponent(f.name),
-      filename: f.name
+      filename: f.name,
+      ext: f.name.toLowerCase().endsWith(".lottie") ? ".lottie" : ".json"
     }));
 }
 
@@ -30,7 +32,7 @@ function renderAnimations(data) {
         style="width: 100%; height: 300px;">
       </lottie-player>
       <div class="title">${item.name}</div>
-      <button class="download-button" onclick="downloadJson('${item.url}', '${item.filename}')">⬇ Скачать JSON</button>
+      <button class="download-button" onclick="downloadJson('${item.url}', '${item.filename}')">⬇ Скачать ${item.ext.toUpperCase().replace('.', '')}</button>
     `;
     container.appendChild(card);
   });
