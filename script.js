@@ -1,4 +1,3 @@
-
 const githubApi = "https://api.github.com/repos/dkicekeeper/lottie-files/contents/";
 const cdnPrefix = "https://cdn.jsdelivr.net/gh/dkicekeeper/lottie-files/";
 
@@ -6,9 +5,9 @@ async function loadAnimations() {
   const res = await fetch(githubApi);
   const files = await res.json();
   return files
-    .filter(f => f.name.endsWith(".json"))
+    .filter(f => f.name.endsWith(".lottie"))
     .map(f => ({
-      name: f.name.replace(".json", ""),
+      name: f.name.replace(".lottie", ""),
       url: cdnPrefix + encodeURIComponent(f.name),
       filename: f.name
     }));
@@ -22,6 +21,7 @@ function renderAnimations(data) {
     card.innerHTML = `
       <lottie-player
         src="${item.url}"
+        mode="lottie"
         background="transparent"
         speed="1"
         loop
@@ -30,13 +30,13 @@ function renderAnimations(data) {
         style="width: 100%; height: 300px;">
       </lottie-player>
       <div class="title">${item.name}</div>
-      <button class="download-button" onclick="downloadJson('${item.url}', '${item.filename}')">⬇ Скачать JSON</button>
+      <button class="download-button" onclick="downloadLottie('${item.url}', '${item.filename}')">⬇ Скачать .lottie</button>
     `;
     container.appendChild(card);
   });
 }
 
-function downloadJson(url, filename) {
+function downloadLottie(url, filename) {
   fetch(url)
     .then(res => res.blob())
     .then(blob => {
