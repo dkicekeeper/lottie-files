@@ -19,16 +19,14 @@ function renderAnimations(data) {
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
-      <lottie-player
+      <dotlottie-player
         src="${item.url}"
-        mode="lottie"
         background="transparent"
         speed="1"
         loop
-        hover
         autoplay
         style="width: 100%; height: 300px;">
-      </lottie-player>
+      </dotlottie-player>
       <div class="title">${item.name}</div>
       <button class="download-button" onclick="downloadLottie('${item.url}', '${item.filename}')">⬇ Скачать .lottie</button>
     `;
